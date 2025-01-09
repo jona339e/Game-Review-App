@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Game Review</string>
+    <string name="password_hint">Password</string>
+    <string name="username_hint">Username</string>
+    <string name="login_hint">Login</string>
+    <string name="welcome_message">Welcome To The Game Review App!</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="full_name">Full Name</string>
+    <string name="create_your_account">Create Your Account</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="i_agree_to_the_terms_and_conditions">I agree to the Terms and Conditions</string>
+    <string name="already_have_an_account_sign_in">Already have an account? Sign In</string>
+    <string name="home_text">Home</string>
+    <string name="title_games">Games</string>
+    <string name="title_account">Account</string>
+</resources>
