@@ -19,7 +19,6 @@ import java.util.Map;
 
 public class HomePage extends AppCompatActivity {
 
-    private FrameLayout contentContainer;
     private Map<Integer, Runnable> navigationActions;
 
     @Override
@@ -33,22 +32,19 @@ public class HomePage extends AppCompatActivity {
             return insets;
         });
 
-        // Container to hold dynamic views
-        contentContainer = findViewById(R.id.content_container);
-
         // Navigation menu
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        // load the initial fragment
+        // load the initial fragment so the view isn't empty
         loadHomeFragment();
 
-        // populate list of navigations
+        // populate list of navigations with a corresponding function
         initializeNavigationActions();
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             // Check if the itemId exists in the map
             if (navigationActions.containsKey(item.getItemId())) {
-                // Execute the corresponding action (Runnable)
+                // Execute the stored function
                 navigationActions.get(item.getItemId()).run();
                 return true;
             }
@@ -71,28 +67,22 @@ public class HomePage extends AppCompatActivity {
     // Methods to load different layouts
     private void loadHomeFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_container, new HomeFragment()) // Replace with your HomeFragment
+                .replace(R.id.content_container, new HomeFragment())
                 .commit();
     }
+
+
     private void loadGamesFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_container, new GamesFragment()) // Replace with your GamesFragment
+                .replace(R.id.content_container, new GamesFragment())
                 .commit();
     }
 
     private void loadAccountFragment() {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_container, new AccountFragment()) // Replace with your AccountFragment
+                .replace(R.id.content_container, new AccountFragment())
                 .commit();
     }
+
+
 }
-
-
-
-
-
-
-
-
-
-

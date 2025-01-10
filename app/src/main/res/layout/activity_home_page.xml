@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".HomePage"
-    android:background="@color/material_dynamic_neutral20">
+    android:background="@color/dark_grey">
 
     <!-- FrameLayout to hold dynamic content -->
     <FrameLayout
@@ -23,10 +23,14 @@
         android:layout_gravity="bottom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu"
-        android:background="@color/design_default_color_primary_dark"
+        android:background="@color/violet"
         app:itemIconTint="@color/white"
         app:itemTextColor="@color/white"
+        app:itemIconSize="32sp"
+        app:labelVisibilityMode="labeled"
+        app:itemHorizontalTranslationEnabled="false"
+        app:itemTextAppearanceActive="@style/BottomNavCenteredText"
+        app:itemTextAppearanceInactive="@style/BottomNavCenteredText" />
 
-        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
