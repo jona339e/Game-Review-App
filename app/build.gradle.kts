@@ -41,5 +41,9 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation(libs.glide)
     implementation(libs.cardview)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
+
 
 }
