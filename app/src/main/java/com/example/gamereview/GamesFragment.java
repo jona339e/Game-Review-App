@@ -17,7 +17,9 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,41 +47,47 @@ public class GamesFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view_games);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Initialize Retrofit
+        // Initialize Retrofit with logging for debugging
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.igdb.com/v4/")
+                .client(client) // Add logging
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         apiService = retrofit.create(IGDBApiService.class);
 
-        // Call method to fetch games
+        // Fetch games
         fetchGames();
 
         return view;
     }
 
     private void fetchGames() {
-        // Create the query model with the required parameters
-        String query = "fields name, platforms.name, rating; sort rating desc; limit 10;";
-
-        // Make the API call with the query object
-        Call<List<Game>> call = apiService.getGames(query);
-
-        // Print the request body for debugging
-        Log.d(TAG, "Request Body: " + new Gson().toJson(query));
+        // Define your query in plain text
+        String body = "fields name, platforms.name, rating; sort rating desc; limit 10;";
+        RequestBody requestBody = RequestBody.create(
+                body,
+                MediaType.parse("application/json")
+        );
+        Call<List<Game>> call = apiService.getGames(requestBody);
 
         call.enqueue(new Callback<List<Game>>() {
+
             @Override
             public void onResponse(Call<List<Game>> call, Response<List<Game>> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     List<Game> games = response.body();
                     Log.d(TAG, "Received " + games.size() + " games.");
-                    GamesAdapter gamesAdapter = new GamesAdapter(games);
-                    recyclerView.setAdapter(gamesAdapter);
+                    recyclerView.setAdapter(new GamesAdapter(games));
                 } else {
-                    Log.e(TAG, "Error: " + response.code());
-                    Toast.makeText(getContext(), "Failed to load games", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "API Error: " + response.code() + " - " + response.message());
+                    Toast.makeText(getContext(), "Failed to load games: " + response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 

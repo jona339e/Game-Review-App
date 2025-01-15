@@ -7,6 +7,7 @@
     android:orientation="vertical"
     android:padding="8dp">
 
+    <!-- Display the Name -->
     <TextView
         android:id="@+id/text_game_name"
         android:layout_width="wrap_content"

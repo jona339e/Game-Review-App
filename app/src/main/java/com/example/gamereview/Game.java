@@ -3,42 +3,22 @@ package com.example.gamereview;
 import java.util.List;
 
 public class Game {
+    private int id;
     private String name;
-    private List<Platform> platforms;
     private double rating;
+    private List<Platform> platforms;
 
-    // Constructor
-    public Game(String name, List<Platform> platforms, double rating) {
-        this.name = name;
-        this.platforms = platforms;
-        this.rating = rating;
-    }
+    // Getters and setters for each field
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    // Getters
-    public String getName() {
-        return name;
-    }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
 
-    public List<Platform> getPlatforms() {
-        return platforms;
-    }
+    public double getRating() { return rating; }
+    public void setRating(double rating) { this.rating = rating; }
 
-    public double getRating() {
-        return rating;
-    }
-
-    // Platform inner class to handle platform objects
-    public static class Platform {
-        private String name;
-
-        // Constructor
-        public Platform(String name) {
-            this.name = name;
-        }
-
-        // Getter
-        public String getName() {
-            return name;
-        }
-    }
+    public List<Platform> getPlatforms() { return platforms; }
+    public void setPlatforms(List<Platform> platforms) { this.platforms = platforms; }
 }
+

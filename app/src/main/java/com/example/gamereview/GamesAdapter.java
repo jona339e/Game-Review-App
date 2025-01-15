@@ -11,61 +11,48 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.GameViewHolder> {
+    private List<Game> gameList;
 
-    private List<Game> gamesList;
-
-    public GamesAdapter(List<Game> gamesList) {
-        this.gamesList = gamesList;
+    public GamesAdapter(List<Game> gameList) {
+        this.gameList = gameList;
     }
 
     @NonNull
     @Override
     public GameViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_game, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_game, parent, false);
         return new GameViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
-        // Get the current game
-        Game game = gamesList.get(position);
+        Game game = gameList.get(position);
+        holder.nameTextView.setText(game.getName());
+        holder.ratingTextView.setText(String.valueOf(game.getRating()));
 
-        // Set the game name
-        holder.nameTextView.setText("Name: " + game.getName());
-
-        // Build the platform string from the list of platforms (ensure it's not null)
-        StringBuilder platformsText = new StringBuilder();
-        if (game.getPlatforms() != null && !game.getPlatforms().isEmpty()) {
-            for (Game.Platform platform : game.getPlatforms()) {
-                if (platformsText.length() > 0) {
-                    platformsText.append(", ");
-                }
-                platformsText.append(platform.getName());
+        if (game.getPlatforms() != null) {
+            StringBuilder platforms = new StringBuilder();
+            for (Platform platform : game.getPlatforms()) {
+                platforms.append(platform.getName()).append(", ");
             }
-        } else {
-            platformsText.append("No platforms available");
+            holder.platformsTextView.setText(platforms.toString());
         }
-        holder.platformsTextView.setText("Platforms: " + platformsText.toString());
-
-        // Set the game rating
-        holder.ratingTextView.setText("Rating: " + game.getRating());
     }
-
 
     @Override
     public int getItemCount() {
-        return gamesList.size();
+        return gameList.size();
     }
 
-    public static class GameViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView, platformsTextView, ratingTextView;
+    static class GameViewHolder extends RecyclerView.ViewHolder {
+        TextView nameTextView, ratingTextView, platformsTextView;
 
         public GameViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.text_game_name);
-            platformsTextView = itemView.findViewById(R.id.text_game_platforms);
             ratingTextView = itemView.findViewById(R.id.text_game_rating);
+            platformsTextView = itemView.findViewById(R.id.text_game_platforms);
         }
     }
 }
+
