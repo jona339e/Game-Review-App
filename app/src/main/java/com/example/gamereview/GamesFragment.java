@@ -29,8 +29,6 @@ import retrofit2.http.Query;
 public class GamesFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private GamesAdapter adapter;
-    private List<Game> gamesList;
     private static final String TAG = "GameFragment";
     private IGDBApiService apiService;
 
@@ -46,10 +44,6 @@ public class GamesFragment extends Fragment {
         // Initialize RecyclerView
         recyclerView = view.findViewById(R.id.recycler_view_games);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-//        gamesList = new ArrayList<>();
-//        adapter = new GamesAdapter(gamesList);
-//        recyclerView.setAdapter(adapter);
 
         // Initialize Retrofit
         Retrofit retrofit = new Retrofit.Builder()
