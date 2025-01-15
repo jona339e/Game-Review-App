@@ -4,17 +4,15 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@drawable/card_background"
-    android:layout_marginBottom="12dp">
+    android:background="?attr/selectableItemBackground">
 
     <TextView
         android:id="@+id/text_category_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Category Title"
-        android:textColor="@color/white"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        />
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:text="Category Title" />
 
 </LinearLayout>
+

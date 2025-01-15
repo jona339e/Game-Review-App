@@ -10,49 +10,49 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.GameViewHolder> {
-    private List<Game> gameList;
+public class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.ViewHolder> {
 
-    public GamesAdapter(List<Game> gameList) {
-        this.gameList = gameList;
+    private final List<Game> games;
+
+    public GamesAdapter(List<Game> games) {
+        this.games = games;
     }
 
     @NonNull
     @Override
-    public GameViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_game, parent, false);
-        return new GameViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull GameViewHolder holder, int position) {
-        Game game = gameList.get(position);
-        holder.nameTextView.setText(game.getName());
-        holder.ratingTextView.setText(String.valueOf(game.getRating()));
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Game game = games.get(position);
+        holder.gameNameTextView.setText(game.getName());
+        holder.gameRatingTextView.setText("Rating: " + game.getRating());
 
-        if (game.getPlatforms() != null) {
-            StringBuilder platforms = new StringBuilder();
-            for (Platform platform : game.getPlatforms()) {
-                platforms.append(platform.getName()).append(", ");
-            }
-            holder.platformsTextView.setText(platforms.toString());
-        }
+        // Format platforms as a comma-separated string
+        String platforms = String.join(", ", game.getPlatforms());
+        holder.gamePlatformsTextView.setText("Platforms: " + platforms);
     }
 
     @Override
     public int getItemCount() {
-        return gameList.size();
+        return games.size();
     }
 
-    static class GameViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView, ratingTextView, platformsTextView;
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView gameNameTextView;
+        TextView gamePlatformsTextView;
+        TextView gameRatingTextView;
 
-        public GameViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            nameTextView = itemView.findViewById(R.id.text_game_name);
-            ratingTextView = itemView.findViewById(R.id.text_game_rating);
-            platformsTextView = itemView.findViewById(R.id.text_game_platforms);
+
+            // Bind the views
+            gameNameTextView = itemView.findViewById(R.id.text_game_name);
+            gamePlatformsTextView = itemView.findViewById(R.id.text_game_platforms);
+            gameRatingTextView = itemView.findViewById(R.id.text_game_rating);
         }
     }
 }
-

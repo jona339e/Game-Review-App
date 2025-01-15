@@ -70,16 +70,19 @@ public class GamesFragment extends Fragment {
 
     private void fetchGames() {
         // Define your query in plain text
-        String body = "fields name, platforms.name, rating; sort rating desc; limit 10;";
+        String query = "fields name, platforms.name, rating; sort rating desc; limit 10;";
+
+        // convert query to json body
         RequestBody requestBody = RequestBody.create(
-                body,
+                query,
                 MediaType.parse("application/json")
         );
+
         Call<List<Game>> call = apiService.getGames(requestBody);
 
         call.enqueue(new Callback<List<Game>>() {
 
-            @Override
+            @Override 
             public void onResponse(Call<List<Game>> call, Response<List<Game>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Game> games = response.body();

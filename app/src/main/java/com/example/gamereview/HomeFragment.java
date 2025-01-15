@@ -33,9 +33,10 @@ public class HomeFragment extends Fragment {
         gameCategories.add(new GameCategory("Plan to Play"));
         gameCategories.add(new GameCategory("Upcoming Games"));
 
-        GameCategoryAdapter adapter = new GameCategoryAdapter(gameCategories);
+        GameCategoryAdapter adapter = new GameCategoryAdapter(gameCategories, getParentFragmentManager());
         recyclerView.setAdapter(adapter);
 
         return view;
     }
+
 }
