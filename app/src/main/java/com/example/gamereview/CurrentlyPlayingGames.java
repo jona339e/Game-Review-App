@@ -33,9 +33,9 @@ public class CurrentlyPlayingGames extends Fragment {
 
         // Example list of currently playing games
         List<Game> currentlyPlayingGames = new ArrayList<>();
-        currentlyPlayingGames.add(new Game("The Witcher 3", Arrays.asList("PC", "PlayStation 5"), 9.8));
-        currentlyPlayingGames.add(new Game("Hollow Knight", Arrays.asList("Nintendo Switch", "PC"), 9.5));
-        currentlyPlayingGames.add(new Game("Cyberpunk 2077", Arrays.asList("Xbox Series X", "PC"), 8.7));
+        currentlyPlayingGames.add(new Game("The Witcher 3", new String[]{"PC", "PlayStation 5"}, 9.8, "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png"));
+        currentlyPlayingGames.add(new Game("Hollow Knight", new String[]{"Nintendo Switch", "PC"}, 9.5, ""));
+        currentlyPlayingGames.add(new Game("Cyberpunk 2077", new String[] {"Xbox Series X", "PC"}, 8.7, ""));
 
         // Set up the adapter
         GamesAdapter adapter = new GamesAdapter(currentlyPlayingGames);

@@ -28,13 +28,15 @@ public class GamesAdapter extends RecyclerView.Adapter<GamesAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Game game = games.get(position);
+
+        // set view elements
         holder.gameNameTextView.setText(game.getName());
         holder.gameRatingTextView.setText("Rating: " + game.getRating());
-
-        // Format platforms as a comma-separated string
-        String platforms = String.join(", ", game.getPlatforms());
+        String platforms = android.text.TextUtils.join(", ", game.getPlatforms());
         holder.gamePlatformsTextView.setText("Platforms: " + platforms);
+
     }
+
 
     @Override
     public int getItemCount() {

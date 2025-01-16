@@ -15,4 +15,5 @@ public interface IGDBApiService {
     })
     @POST("games/")
     Call<List<Game>> getGames(@Body RequestBody query);
-    }
+
+}

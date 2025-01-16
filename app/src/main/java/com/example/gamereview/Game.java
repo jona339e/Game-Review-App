@@ -1,17 +1,33 @@
 package com.example.gamereview;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
     private String name;
-    private List<String> platforms; // Changed to a List to store multiple platforms
+    private List<Platform> platforms; // Updated to store Platform objects
     private double rating;
+    private String imageUrl; // Image URL added
 
-    // Constructor
-    public Game(String name, List<String> platforms, double rating) {
+    // Constructor with name, platforms, rating, and imageUrl
+    public Game(String name, List<Platform> platforms, double rating, String imageUrl) {
         this.name = name;
         this.platforms = platforms;
         this.rating = rating;
+        this.imageUrl = imageUrl; // Set the imageUrl
+    }
+
+    // Constructor for List<String> - uses helper method to convert to Platform objects, and takes an imageUrl
+    public Game(String name, String[] platformNames, double rating, String imageUrl) {
+        List<Platform> platformsList = new ArrayList<>();
+        for (String platformName : platformNames) {
+            platformsList.add(new Platform(platformName));
+        }
+
+        this.name = name;
+        this.platforms = platformsList;
+        this.rating = rating;
+        this.imageUrl = imageUrl; // Set the imageUrl
     }
 
     // No-argument constructor
@@ -27,11 +43,19 @@ public class Game {
         this.name = name;
     }
 
-    public List<String> getPlatforms() {
+    public List<Platform> getPlatforms() {
         return platforms;
     }
 
-    public void setPlatforms(List<String> platforms) {
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setPlatforms(List<Platform> platforms) {
         this.platforms = platforms;
     }
 
@@ -49,6 +73,8 @@ public class Game {
                 "name='" + name + '\'' +
                 ", platforms=" + platforms +
                 ", rating=" + rating +
+                ", imageUrl='" + imageUrl + '\'' + // Added imageUrl to toString
                 '}';
     }
 }
+

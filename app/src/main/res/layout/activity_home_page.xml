@@ -26,6 +26,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu"
         android:background="@color/violet"
+        app:backgroundTint="?attr/colorPrimary"
         app:itemIconTint="@color/nav_item_icon_color"
         app:itemTextColor="@color/nav_item_text_color"
         app:itemIconSize="32sp"
