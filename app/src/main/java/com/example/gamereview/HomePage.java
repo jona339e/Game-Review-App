@@ -54,6 +54,8 @@ public class HomePage extends AppCompatActivity {
             return false;
         });
 
+        GameManager.getInstance().fetchGamesForUser(this);
+
     }
 
     private void initializeNavigationActions() {

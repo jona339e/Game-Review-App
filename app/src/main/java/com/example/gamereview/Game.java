@@ -1,7 +1,9 @@
 package com.example.gamereview;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class Game {
@@ -93,6 +95,32 @@ public class Game {
     @Override
     public int hashCode() {
         return Objects.hash(id); // Ensure this matches the property used in equals()
+    }
+
+    public Map<String, Object> toMap() {
+        Map<String, Object> gameMap = new HashMap<>();
+        gameMap.put("id", id);
+        gameMap.put("name", name);
+        gameMap.put("rating", rating);
+
+        // Convert platforms list to a list of maps
+        List<Map<String, Object>> platformMaps = new ArrayList<>();
+        for (Platform platform : platforms) {
+            Map<String, Object> platformMap = new HashMap<>();
+            platformMap.put("id", platform.getId());
+            platformMap.put("name", platform.getName());
+            platformMaps.add(platformMap);
+        }
+        gameMap.put("platforms", platformMaps);
+
+        // Convert cover to map if it's not null
+        if (cover != null) {
+            Map<String, Object> coverMap = new HashMap<>();
+            coverMap.put("url", cover.getUrl());
+            gameMap.put("cover", coverMap);
+        }
+
+        return gameMap;
     }
 
 }

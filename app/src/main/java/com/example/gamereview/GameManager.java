@@ -4,6 +4,10 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
@@ -12,7 +16,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 public class GameManager {
     private static GameManager instance;
@@ -33,69 +41,62 @@ public class GameManager {
         return instance;
     }
 
+
+//    public void addGameToUser(Game game, Context context) {
+//        Map<String, Object> test = new HashMap<>();
+//        test.put("test1", "1");
+//        test.put("test2", "2");
+//        test.put("test3", "3");
+//
+//        db.collection("test")
+//                .add(test)
+//                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                    @Override
+//                    public void onSuccess(DocumentReference documentReference) {
+//                        Log.d("Firebase Insert", "DocumentSnapshot added with ID: " + documentReference.getId());
+//
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w("Firebase Insert", "Error Adding Document", e);
+//                    }
+//                });
+//
+//
+//    }
+
+
     public void addGameToUser(Game game, Context context) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Log if the user is authenticated
         if (currentUser != null) {
             String userId = currentUser.getUid();
-            Log.d("GameManager", "User ID: " + userId);
 
             // Reference to the user's document in Firestore
             DocumentReference userDocRef = db.collection("users").document(userId);
 
-            // Log the game data that is being added
-            Log.d("GameManager", "Adding game: " + game.getName() + ", Game ID: " + game.getId());
+            // Add the game to the user's selectedGames field
+            User user = User.getInstance();
+            user.getSelectedGames().add(game); // Add the new game to the selectedGames
 
-            // Use set() to create the document if it doesn't exist, and arrayUnion to add the game
-            userDocRef.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot documentSnapshot = task.getResult();
-                    if (documentSnapshot.exists()) {
-                        // If the document exists, update the selectedGames field
-                        userDocRef.update("selectedGames", FieldValue.arrayUnion(game))
-                                .addOnSuccessListener(aVoid -> {
-                                    Log.d("GameManager", "Game added successfully to Firestore");
-                                    Toast.makeText(context, "Game added successfully", Toast.LENGTH_SHORT).show();
-                                })
-                                .addOnFailureListener(e -> {
-                                    Log.e("GameManager", "Failed to add game", e);
-                                    Toast.makeText(context, "Failed to add game", Toast.LENGTH_SHORT).show();
-                                });
-                    } else {
-                        // If the document doesn't exist, create it with the new game in selectedGames
-                        userDocRef.set(User.getInstance(), SetOptions.merge())
-                                .addOnSuccessListener(aVoid -> {
-                                    userDocRef.update("selectedGames", FieldValue.arrayUnion(game))
-                                            .addOnSuccessListener(aVoid1 -> {
-                                                Log.d("GameManager", "Game added successfully after creating document");
-                                                Toast.makeText(context, "Game added successfully", Toast.LENGTH_SHORT).show();
-                                            })
-                                            .addOnFailureListener(e2 -> {
-                                                Log.e("GameManager", "Failed to add game after creating document", e2);
-                                                Toast.makeText(context, "Failed to add game", Toast.LENGTH_SHORT).show();
-                                            });
-                                })
-                                .addOnFailureListener(e1 -> {
-                                    Log.e("GameManager", "Failed to create user document", e1);
-                                    Toast.makeText(context, "Failed to create user document", Toast.LENGTH_SHORT).show();
-                                });
-                    }
-                } else {
-                    Log.e("GameManager", "Failed to get user document", task.getException());
-                    Toast.makeText(context, "Failed to get user document", Toast.LENGTH_SHORT).show();
-                }
-            });
+            // Save the updated User object to Firestore
+            userDocRef.set(user.toMap(), SetOptions.merge()) // Merge to avoid overwriting other data
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("Firebase Insert", "User document successfully updated!");
+                        Toast.makeText(context, "Game added successfully", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("Firebase Insert", "Error adding game to user", e);
+                        Toast.makeText(context, "Failed to add game", Toast.LENGTH_SHORT).show();
+                    });
         } else {
-            // Log if the user is not authenticated
             Log.e("GameManager", "No authenticated user found");
         }
     }
 
 
-
-
-    // Method to fetch the list of games for the logged-in user
     public void fetchGamesForUser(Context context) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
@@ -111,14 +112,25 @@ public class GameManager {
                             DocumentSnapshot documentSnapshot = task.getResult();
                             if (documentSnapshot.exists()) {
                                 // Retrieve the selectedGames field
-                                HashSet<Game> selectedGames = (HashSet<Game>) documentSnapshot.get("selectedGames");
+                                List<Map<String, Object>> selectedGamesData = (List<Map<String, Object>>) documentSnapshot.get("selectedGames");
 
-                                if (selectedGames != null) {
+                                if (selectedGamesData != null) {
+                                    // Create a HashSet to hold the deserialized Game objects
+                                    HashSet<Game> selectedGames = new HashSet<>();
+
+                                    // Deserialize each game from the map
+                                    for (Map<String, Object> gameData : selectedGamesData) {
+                                        Game game = deserializeGame(gameData);
+                                        if (game != null) {
+                                            selectedGames.add(game);
+                                        }
+                                    }
+
                                     // Update the selectedGames in the User singleton
                                     User.getInstance().setSelectedGames(selectedGames);
 
                                     // Optionally, update UI or RecyclerView with the games
-                                    // Example: recyclerViewAdapter.setGames(selectedGames);
+                                    // Example: recyclerViewAdapter.setGames(new ArrayList<>(selectedGames));
                                 }
                             } else {
                                 Toast.makeText(context, "No games found for this user", Toast.LENGTH_SHORT).show();
@@ -129,4 +141,37 @@ public class GameManager {
                     });
         }
     }
+
+    // Helper method to deserialize a game from the data map
+    private Game deserializeGame(Map<String, Object> gameData) {
+        try {
+            int id = ((Long) gameData.get("id")).intValue();
+            String name = (String) gameData.get("name");
+            double rating = (Double) gameData.get("rating");
+
+            // Assuming Platform and Cover are also stored in the game data
+            List<Map<String, Object>> platformsData = (List<Map<String, Object>>) gameData.get("platforms");
+            List<Platform> platforms = new ArrayList<>();
+            if (platformsData != null) {
+                for (Map<String, Object> platformData : platformsData) {
+                    String platformName = (String) platformData.get("name");
+                    platforms.add(new Platform(platformName));
+                }
+            }
+
+            Map<String, Object> coverData = (Map<String, Object>) gameData.get("cover");
+            Cover cover = null;
+            if (coverData != null) {
+                String url = (String) coverData.get("url");
+                cover = new Cover();
+                cover.setUrl(url);
+            }
+
+            return new Game(id, name, platforms, rating, cover);
+        } catch (Exception e) {
+            Log.e("GameManager", "Error deserializing game", e);
+            return null; // In case of error, return null
+        }
+    }
+
 }
