@@ -31,16 +31,14 @@ public class CurrentlyPlayingGames extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view_currently_playing);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // Example list of currently playing games
-        List<Game> currentlyPlayingGames = new ArrayList<>();
-        currentlyPlayingGames.add(new Game("The Witcher 3", new String[]{"PC", "PlayStation 5"}, 9.8, "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png"));
-        currentlyPlayingGames.add(new Game("Hollow Knight", new String[]{"Nintendo Switch", "PC"}, 9.5, ""));
-        currentlyPlayingGames.add(new Game("Cyberpunk 2077", new String[] {"Xbox Series X", "PC"}, 8.7, ""));
+        // Convert HashSet to List for the adapter
+        List<Game> currentlyPlayingGames = User.getInstance().getSelectedGamesAsList();
 
         // Set up the adapter
-        GamesAdapter adapter = new GamesAdapter(currentlyPlayingGames);
+        GamesAdapter adapter = new GamesAdapter(currentlyPlayingGames, null); // No click listener for this fragment
         recyclerView.setAdapter(adapter);
 
         return view;
     }
 }
+

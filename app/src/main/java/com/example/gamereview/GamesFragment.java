@@ -69,10 +69,7 @@ public class GamesFragment extends Fragment {
     }
 
     private void fetchGames() {
-        // Define your query in plain text
-        String query = "fields name, platforms.name, rating; sort rating desc; limit 10;";
-
-        // convert query to json body
+        String query = "fields name, platforms.name, rating, cover.url; sort rating desc; limit 10;";
         RequestBody requestBody = RequestBody.create(
                 query,
                 MediaType.parse("application/json")
@@ -81,13 +78,19 @@ public class GamesFragment extends Fragment {
         Call<List<Game>> call = apiService.getGames(requestBody);
 
         call.enqueue(new Callback<List<Game>>() {
-
-            @Override 
+            @Override
             public void onResponse(Call<List<Game>> call, Response<List<Game>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Game> games = response.body();
                     Log.d(TAG, "Received " + games.size() + " games.");
-                    recyclerView.setAdapter(new GamesAdapter(games));
+
+                    GamesAdapter adapter = new GamesAdapter(games, game -> {
+                        // Add the game to HomePage's selected games list
+                        User.getInstance().getSelectedGames().add(game);
+                        Toast.makeText(getContext(), game.getName() + " added to your list!", Toast.LENGTH_SHORT).show();
+                    });
+
+                    recyclerView.setAdapter(adapter);
                 } else {
                     Log.e(TAG, "API Error: " + response.code() + " - " + response.message());
                     Toast.makeText(getContext(), "Failed to load games: " + response.message(), Toast.LENGTH_SHORT).show();
@@ -101,5 +104,6 @@ public class GamesFragment extends Fragment {
             }
         });
     }
+
 
 }

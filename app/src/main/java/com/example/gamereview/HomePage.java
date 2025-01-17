@@ -14,7 +14,10 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 public class HomePage extends AppCompatActivity {
@@ -83,6 +86,7 @@ public class HomePage extends AppCompatActivity {
                 .replace(R.id.content_container, new AccountFragment())
                 .commit();
     }
+
 
 
 }

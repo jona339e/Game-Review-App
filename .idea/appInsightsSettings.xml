@@ -9,10 +9,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.gamereview" />
+                  <option name="mobileSdkAppId" value="1:568461476805:android:cd800fe99826580b2481ac" />
+                  <option name="projectId" value="game-tracker-app-c1b13" />
+                  <option name="projectNumber" value="568461476805" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
